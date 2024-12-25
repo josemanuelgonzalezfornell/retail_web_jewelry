@@ -144,21 +144,35 @@ class BBDD_MANAGEMENT():
         df = pd.DataFrame(data)
         df = df.set_index(primary_key)
         return df
-    def get_data(self, table_name: str):
-        query = self.session.query(self.models[table_name.capitalize()])
-        primary_key = self.models[table_name.capitalize()].__table__.primary_key.columns[0].name
-        result = query.all()
+    # def get_data(self, table_name: str):
+    #     query = self.session.query(self.models[table_name.capitalize()])
+    #     primary_key = self.models[table_name.capitalize()].__table__.primary_key.columns[0].name
+    #     result = query.all()
         
-        # Convertir el resultado a un DataFrame
-        data = [row.__dict__ for row in result]  # Convierte las filas a diccionarios
-        for item in data:
-            item.pop('_sa_instance_state', None)  # Elimina metadatos internos de SQLAlchemy
+    #     # Convertir el resultado a un DataFrame
+    #     data = [row.__dict__ for row in result]  # Convierte las filas a diccionarios
+    #     for item in data:
+    #         item.pop('_sa_instance_state', None)  # Elimina metadatos internos de SQLAlchemy
 
-        df = pd.DataFrame(data)
-        df = df.set_index(primary_key)
-        return df
+    #     df = pd.DataFrame(data)
+    #     df = df.set_index(primary_key)
+    #     return df
     
     def get_columns(self, table_name: str):
         inspector = inspect(self.engine)
         columns = inspector.get_columns(table_name)
         return columns
+    
+    def drop_data(self, table_name: str, filters: dict):
+        query = self.session.query(self.models[table_name.capitalize()])
+        try:
+            for key, value in filters.items():
+                query = query.filter(getattr(self.models[table_name.capitalize()], key) == value)
+            
+            # Eliminar los registros
+            rows_deleted = query.delete(synchronize_session='fetch')
+            self.session.commit()
+
+            print(f"{rows_deleted} registros han sido eliminados de la tabla {table_name} de la base de datos.")
+        except Exception as e:
+            print(f"Error al eliminar los registros de la tabla {table_name}: {str(e)}")
