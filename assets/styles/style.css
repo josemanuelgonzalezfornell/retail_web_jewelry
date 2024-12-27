@@ -1,0 +1,141 @@
+/* General */
+
+html,
+body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: space-around;
+    justify-content: space-between;
+    align-items: stretch;
+    font-family: Helvetica;
+}
+
+.left,
+.right {
+    height: 100%;
+    flex: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-around;
+    align-items: center;
+}
+
+img {
+    height: calc(100% - 20px);
+    margin: 10px;
+}
+
+button {
+    margin: inherit;
+    padding: inherit;
+    color: inherit;
+    background: inherit;
+    border: inherit;
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+}
+
+/* Layout */
+
+header,
+main,
+footer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    align-items: center;
+}
+
+header,
+footer {
+    color: var(--background);
+    background-color: var(--foreground);
+}
+
+main,
+footer {
+    justify-content: center;
+}
+
+header {
+    height: 60px;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+}
+
+footer {
+    padding: 20px 0px 20px 0px;
+}
+
+/* Header */
+
+header button {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+header button:hover,
+header button:focus {
+    background-color: var(--color_1);
+}
+
+#logo {
+    margin: 20px;
+    font-size: 18pt;
+    letter-spacing: 8pt;
+    font-weight: lighter;
+    text-transform: uppercase;
+}
+
+nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-weight: bold;
+}
+
+nav button {
+    padding: 0px 20px 0px 20px;
+}
+
+#cart {
+    align-items: flex-start;
+    position: relative;
+}
+
+#cart-quantity {
+    position: absolute;
+    margin-top: 10px;
+    margin-left: 4px;
+    font-size: 14pt;
+    text-align: center;
+}
+
+/* Main */
+
+main {
+    height: 1000px;
+}
