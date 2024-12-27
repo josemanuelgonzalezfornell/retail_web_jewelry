@@ -50,7 +50,7 @@ async def get_all_data(request: Request, table_name: str = Form(...)):
     data = ddbb_manager.get_all_data(table_name)
     return templates.TemplateResponse("read_bbdd.html", {"request": request, "data": data})
 
-@bbdd_manager_route.post("/get_columns", response_class=HTMLResponse)
+@@bbdd_manager_route.post("/get_columns", response_class=JSONResponse)
 async def get_columns(request: Request, table_name: str = Form(...)):
     data = ddbb_manager.get_columns(table_name)
-    return templates.TemplateResponse("read_bbdd.html", {"request": request, "data": data})
+    return JSONResponse(status_code=200, content={"data": data})
