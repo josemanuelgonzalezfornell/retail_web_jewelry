@@ -1,0 +1,18 @@
+{
+    "en": {
+        "home": "home",
+        "products": "products",
+        "about": "about",
+        "en": "english",
+        "es": "español",
+        "login": "login"
+    },
+    "es": {
+        "home": "inicio",
+        "products": "productos",
+        "about": "conócenos",
+        "en": "english",
+        "es": "español",
+        "login": "iniciar sesión"
+    }
+}

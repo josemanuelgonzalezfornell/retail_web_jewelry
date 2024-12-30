@@ -2,31 +2,35 @@
 
 html,
 body {
-    width: 100%;
     margin: 0;
     padding: 0;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-content: space-around;
-    justify-content: space-between;
-    align-items: stretch;
+    min-width: 100%;
+    display: inline-block;
     font-family: Helvetica;
+    letter-spacing: 2pt;
 }
 
 .left,
 .right {
-    height: 100%;
-    flex: none;
+    height: inherit;
+    width: inherit;
+    flex: auto;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     align-content: center;
-    justify-content: space-around;
     align-items: center;
+}
+
+.left {
+    justify-content: flex-start;
+}
+
+.right {
+    justify-content: flex-end;
 }
 
 img {
@@ -46,6 +50,11 @@ button {
     font-weight: inherit;
 }
 
+button:not(:has(img)) {
+    padding: 0px 20px 0px 20px;
+    white-space: nowrap;
+}
+
 /* Layout */
 
 header,
@@ -56,69 +65,99 @@ footer {
     flex-direction: row;
     flex-wrap: nowrap;
     align-content: center;
-    align-items: center;
 }
 
 header,
-footer {
+footer,
+#submenu {
     color: var(--background);
     background-color: var(--foreground);
 }
 
-main,
+header,
 footer {
-    justify-content: center;
+    height: var(--frame);
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
 header {
-    height: 60px;
-    justify-content: space-between;
     position: sticky;
     top: 0;
 }
 
-footer {
-    padding: 20px 0px 20px 0px;
+main {
+    min-height: calc(100vh - 2* var(--frame));
+    justify-content: center;
+    align-items: center;
 }
 
 /* Header */
 
-header button {
+header button,
+footer button {
+    height: 100%;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     align-content: center;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    letter-spacing: inherit;
+    word-spacing: inherit;
 }
 
 header button:hover,
-header button:focus {
+header button:focus,
+footer button:hover,
+footer button:focus {
     background-color: var(--color_1);
 }
 
+#logo,
+nav {
+    height: var(--frame);
+}
+
 #logo {
-    margin: 20px;
+    margin: 0 20px 0px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* TODO: remove */
+#logo span {
+    /* vertical-align: middle; */
     font-size: 18pt;
     letter-spacing: 8pt;
     font-weight: lighter;
     text-transform: uppercase;
+    white-space: nowrap;
+    /* height: 100%; */
 }
 
 nav {
+    flex: auto;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     align-content: center;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    /* height: 100%; */
     font-weight: bold;
 }
 
-nav button {
-    padding: 0px 20px 0px 20px;
+#submenu {
+    border: solid var(--border) var(--background);
+}
+
+#submenu>button {
+    width: 200px;
 }
 
 #cart {
@@ -134,8 +173,27 @@ nav button {
     text-align: center;
 }
 
+/* Footer */
+
+footer button {
+    padding-right: 30px;
+}
+
 /* Main */
 
-main {
-    height: 1000px;
+/* Phone features */
+
+@media (max-width: 600px) {
+    header {
+        height: calc(2* var(--frame));
+        flex-direction: column;
+    }
+
+    footer button {
+        padding-right: 0px;
+    }
+
+    footer span {
+        display: none;
+    }
 }
