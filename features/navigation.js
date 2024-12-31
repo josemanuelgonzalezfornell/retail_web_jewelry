@@ -1,4 +1,32 @@
-function loadMenu(strings) {
+/**
+ * Handles navigation by fetching and displaying the requested view.
+ *
+ * @param {Event} event - The event object from the navigation trigger.
+ * @returns {Promise<void>} A promise that resolves when the view has been successfully fetched and displayed.
+ * @throws {Error} Throws an error if the fetch request fails.
+ */
+async function navigate(event) {
+    const view = event.currentTarget.id;
+    try {
+        const response = await fetch("../views/" + view + ".html");
+        if (!response.ok) {
+            throw new Error("HTTP error " + response.status + " while fetching view " + view + ".");
+        }
+        const content = await response.text();
+        document.getElementById("content").innerHTML = content;
+        loadStrings();
+    } catch (error) {
+        console.error("Failed to fetch view " + view + ":", error);
+    }
+    // TODO: change to navigating to specific URLs instead.
+}
+
+/**
+ * Initializes the navigation menu with the provided strings for button labels and submenus.
+ * 
+ * @param {Object} strings - An object containing the text for various navigation elements.
+ */
+function loadNav(strings) {
     const buttons = document.getElementsByTagName('nav')[0].getElementsByTagName('button');
     for (let button = 0; button < buttons.length; button++) {
         if (buttons[button].id == "language") {
@@ -24,20 +52,15 @@ function loadMenu(strings) {
         } else {
             buttons[button].addEventListener("click", navigate);
         }
-        if (buttons[button].getElementsByTagName("img").length == 0) {
-            removeChildren(buttons[button]);
-            let span = document.createElement("span");
-            buttons[button].appendChild(span);
-            span.textContent = strings[buttons[button].id];
-        }
     }
     document.addEventListener("click", hideMenu);
 }
 
-function navigate(event) {
-    console.log(event.currentTarget.id); // TODO: implement navigation
-}
-
+/**
+ * Displays the corresponding submenu when a menu item is clicked.
+ *
+ * @param {Event} event - The event triggered by clicking the menu item.
+ */
 function showMenu(event) {
     const menu = event.currentTarget;
     event.stopPropagation();
@@ -62,6 +85,11 @@ function showMenu(event) {
     }
 }
 
+/**
+ * Hides the submenu by removing the element with the ID "submenu" from the DOM.
+ *
+ * @param {Event} event - The event object that triggered the function.
+ */
 function hideMenu(event) {
     var submenu = document.getElementById("submenu");
     if (submenu) {
@@ -69,6 +97,11 @@ function hideMenu(event) {
     }
 }
 
+/**
+ * Handles the click event for changing the language.
+ *
+ * @param {Event} event - The event object from the click event.
+ */
 function clickLanguage(event) {
     setLanguage(event.currentTarget.id);
-}
+};

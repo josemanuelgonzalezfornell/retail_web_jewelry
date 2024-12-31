@@ -5,7 +5,13 @@
         "about": "about",
         "en": "english",
         "es": "español",
-        "login": "login"
+        "orders": "my orders",
+        "profile": "my profile",
+        "signup": "sign up",
+        "login": "log in",
+        "logout": "log out",
+        "username": "username",
+        "password": "password"
     },
     "es": {
         "home": "inicio",
@@ -13,6 +19,12 @@
         "about": "conócenos",
         "en": "english",
         "es": "español",
-        "login": "iniciar sesión"
+        "orders": "mis pedidos",
+        "profile": "mi perfil",
+        "signup": "registrarse",
+        "login": "iniciar sesión",
+        "logout": "cerrar sesión",
+        "username": "nombre de usuario",
+        "password": "contraseña"
     }
 }
