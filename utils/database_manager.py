@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker, relationship
 import pandas as pd
 
 class BBDD_MANAGEMENT():
-    def __init__(self, database_path):
+    def __init__(self, database_path, rag_manager):
         self.engine = create_engine(f"sqlite:///{database_path}")
         with self.engine.connect() as conn:
             conn.execute("PRAGMA foreign_keys = ON;")
@@ -13,8 +13,21 @@ class BBDD_MANAGEMENT():
         self.session = self.Session()
         self.tables = inspect(self.engine).get_table_names()
         self.models = self._generate_models()
+        self.rag_manager = rag_manager
             
     def _generate_models(self):
+        """
+        Generates dynamic SQLAlchemy model classes for each table in the database.
+
+        This function inspects the database schema to retrieve the list of tables and their
+        corresponding columns. For each table, it dynamically creates a SQLAlchemy model class
+        with the appropriate column definitions, including primary keys. The model classes are
+        stored in a dictionary with the table name (capitalized) as the key.
+
+        Returns:
+            dict: A dictionary mapping table names (capitalized) to their corresponding SQLAlchemy model classes.
+        """
+
         inspector = inspect(self.engine)
         models = {}
 
@@ -77,7 +90,7 @@ class BBDD_MANAGEMENT():
         else:
             print(f"La tabla {table_name} no existe en la base de datos.")
 
-    def upload_data(self, table_name: str, data: dict):
+    def add_data(self, table_name: str, data: dict):
         inspector = inspect(self.engine)
         
 
@@ -95,6 +108,9 @@ class BBDD_MANAGEMENT():
             data["update_date"] = pd.to_datetime("now")
             df = pd.DataFrame([data])
             df.to_sql(table_name, self.engine, if_exists='append', index=False)
+            
+            self.rag_manager.add_data(data)
+
             print(f"Los datos han sido cargados en la tabla {table_name} de la base de datos.")
         else:
             print(f"La tabla {table_name} no existe en la base de datos.")
@@ -144,19 +160,6 @@ class BBDD_MANAGEMENT():
         df = pd.DataFrame(data)
         df = df.set_index(primary_key)
         return df
-    # def get_data(self, table_name: str):
-    #     query = self.session.query(self.models[table_name.capitalize()])
-    #     primary_key = self.models[table_name.capitalize()].__table__.primary_key.columns[0].name
-    #     result = query.all()
-        
-    #     # Convertir el resultado a un DataFrame
-    #     data = [row.__dict__ for row in result]  # Convierte las filas a diccionarios
-    #     for item in data:
-    #         item.pop('_sa_instance_state', None)  # Elimina metadatos internos de SQLAlchemy
-
-    #     df = pd.DataFrame(data)
-    #     df = df.set_index(primary_key)
-    #     return df
     
     def get_columns(self, table_name: str):
         inspector = inspect(self.engine)
