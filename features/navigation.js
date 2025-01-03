@@ -8,92 +8,101 @@
 async function navigate(event) {
     const view = event.currentTarget.id;
     try {
-        const response = await fetch("../views/" + view + ".html");
+        const response = await fetch("../views/" + view + ".html"); // TODO: change to navigating to specific URLs instead.
         if (!response.ok) {
             throw new Error("HTTP error " + response.status + " while fetching view " + view + ".");
         }
         const content = await response.text();
         document.getElementById("content").innerHTML = content;
-        loadStrings();
+        setStrings();
     } catch (error) {
         console.error("Failed to fetch view " + view + ":", error);
     }
-    // TODO: change to navigating to specific URLs instead.
 }
 
 /**
- * Initializes the navigation menu with the provided strings for button labels and submenus.
- * 
- * @param {Object} strings - An object containing the text for various navigation elements.
- */
-function loadNav(strings) {
-    const buttons = document.getElementsByTagName('nav')[0].getElementsByTagName('button');
-    for (let button = 0; button < buttons.length; button++) {
-        if (buttons[button].id == "language") {
-            buttons[button].submenu = [
-                { id: "en", text: strings["en"], listener: clickLanguage },
-                { id: "es", text: strings["es"], listener: clickLanguage }
+ * Initializes submenus and configures listeners for all navigation buttons.
+*/
+function setNavigation() {
+    // Menus
+    /**
+     * Creates a submenu button element.
+     *
+     * @param {string} id - The ID for the submenu button.
+     * @param {function} listener - The event listener function for the submenu button.
+     * @returns {HTMLButtonElement} The submenu button element.
+     */
+    function createSubmenu(id, listener) {
+        let submenu = document.createElement("button");
+        submenu.type = "button";
+        submenu.id = id;
+        submenu.classList.add("string");
+        submenu.addEventListener("click", listener);
+        return submenu;
+    }
+    const menus = document.getElementsByClassName("menu");
+    for (let menu = 0; menu < menus.length; menu++) {
+        if (menus[menu].id == "language") {
+            menus[menu].submenus = [
+                createSubmenu("en", clickLanguage),
+                createSubmenu("es", clickLanguage)
             ];
-        } else if (buttons[button].id == "user") {
+        } else if (menus[menu].id == "user") {
             if (localStorage.getItem("user")) { // TODO: implement user session
-                buttons[button].submenu = [
-                    { id: "orders", text: strings["orders"], listener: navigate },
-                    { id: "profile", text: strings["profile"], listener: navigate },
-                    { id: "logout", text: strings["logout"], listener: navigate }
+                menus[menu].submenus = [
+                    createSubmenu("orders", navigate),
+                    createSubmenu("profile", navigate),
+                    createSubmenu("logout", navigate)
                 ];
             } else {
-                buttons[button].submenu = [
-                    { id: "login", text: strings["login"], listener: navigate }
+                menus[menu].submenus = [
+                    createSubmenu("login", navigate)
                 ];
             }
         }
-        if (buttons[button].submenu) {
-            buttons[button].addEventListener("click", showMenu);
-        } else {
-            buttons[button].addEventListener("click", navigate);
-        }
+        menus[menu].addEventListener("click", showMenu);
     }
     document.addEventListener("click", hideMenu);
+    // Navigations
+    const navigations = document.getElementsByClassName("navigation");
+    for (let navigation = 0; navigation < navigations.length; navigation++) {
+        navigations[navigation].addEventListener("click", navigate);
+    }
 }
 
 /**
- * Displays the corresponding submenu when a menu item is clicked.
+ * Displays the corresponding menu when a nav button is clicked.
  *
- * @param {Event} event - The event triggered by clicking the menu item.
+ * @param {Event} event - The event triggered by clicking the nav button.
  */
 function showMenu(event) {
-    const menu = event.currentTarget;
+    const button = event.currentTarget;
+    const submenus = button.submenus;
     event.stopPropagation();
-    var submenu = document.getElementById("submenu");
-    if (submenu) {
-        submenu.remove();
+    var menu = document.getElementById("menu");
+    if (menu) {
+        menu.remove();
     }
-    submenu = document.createElement("div");
-    document.getElementsByTagName("nav")[0].appendChild(submenu);
-    submenu.id = "submenu";
-    submenu.style.position = "absolute";
-    submenu.style.top = menu.offsetHeight + menu.offsetTop + "px";
-    submenu.style.right = document.body.getBoundingClientRect().right - menu.getBoundingClientRect().right + "px";
-    for (let item = 0; item < menu.submenu.length; item++) {
-        let button = document.createElement("button");
-        submenu.appendChild(button);
-        button.type = "button";
-        button.id = menu.submenu[item].id;
-        button.textContent = menu.submenu[item].text;
-        button.addEventListener("click", menu.submenu[item].listener);
-        button.style.height = menu.offsetHeight + "px";
+    menu = document.createElement("div");
+    document.getElementsByTagName("nav")[0].appendChild(menu);
+    menu.id = "menu";
+    menu.style.position = "absolute";
+    menu.style.top = button.offsetHeight + button.offsetTop + "px";
+    menu.style.right = document.body.getBoundingClientRect().right - button.getBoundingClientRect().right + "px";
+    for (let submenu = 0; submenu < submenus.length; submenu++) {
+        menu.appendChild(submenus[submenu]);
     }
 }
 
 /**
- * Hides the submenu by removing the element with the ID "submenu" from the DOM.
+ * Hides the menu by removing the element with the ID "menu" from the DOM.
  *
  * @param {Event} event - The event object that triggered the function.
  */
 function hideMenu(event) {
-    var submenu = document.getElementById("submenu");
-    if (submenu) {
-        submenu.remove();
+    var menu = document.getElementById("menu");
+    if (menu) {
+        menu.remove();
     }
 }
 

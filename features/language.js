@@ -4,22 +4,32 @@
  */
 function setLanguage(language = "en") {
     localStorage.setItem('language', language);
-    loadStrings();
+    setStrings();
 }
 
 /**
  * Sets the strings for the web content.
  */
-function loadStrings() {
+function setStrings() {
+    function setString(element, string) {
+        if (element.tagName == "INPUT") {
+            document.querySelector("label[for=\"" + element.id + "\"]").textContent = string;
+        } else {
+            element.textContent = string;
+        }
+    }
     const language = localStorage.getItem('language');
     fetchStrings(language).then(strings => {
-        loadNav(strings);
-        const elements = document.getElementsByClassName("string");
-        for (let element = 0; element < elements.length; element++) {
-            if (elements[element].tagName == "INPUT") {
-                document.querySelector("label[for=\"" + elements[element].id + "\"]").textContent = strings[elements[element].id];
-            } else {
-                elements[element].textContent = strings[elements[element].id];
+        var menus = document.getElementsByClassName("string");
+        for (let element = 0; element < menus.length; element++) {
+            setString(menus[element], strings[menus[element].id]);
+        }
+        // Submenus
+        menus = document.getElementsByClassName("menu");
+        for (let menu = 0; menu < menus.length; menu++) {
+            const submenus = menus[menu].submenus;
+            for (let submenu = 0; submenu < submenus.length; submenu++) {
+                setString(submenus[submenu], strings[submenus[submenu].id]);
             }
         }
     });

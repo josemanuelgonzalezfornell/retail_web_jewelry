@@ -2,6 +2,7 @@
  * Main function to initialize the application.
  */
 function main() {
+    setNavigation();
     setLanguage();
 }
 

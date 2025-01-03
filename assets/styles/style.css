@@ -57,9 +57,12 @@ button:not(:has(img)) {
     white-space: nowrap;
 }
 
-button:hover,
-button:focus {
+button:hover {
     background-color: var(--color_1);
+}
+
+button:focus {
+    outline: solid var(--border) var(--color_1);
 }
 
 main button {
@@ -114,7 +117,7 @@ main {
 
 header,
 footer,
-#submenu {
+#menu {
     color: var(--background);
     background-color: var(--foreground);
 }
@@ -187,11 +190,12 @@ nav {
     font-weight: bold;
 }
 
-#submenu {
+#menu {
     border: solid var(--border) var(--background);
 }
 
-#submenu>button {
+#menu>button {
+    height: 40px;
     width: 200px;
 }
 
