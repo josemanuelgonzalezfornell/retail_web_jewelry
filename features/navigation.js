@@ -1,29 +1,7 @@
 /**
- * Handles navigation by fetching and displaying the requested view.
- *
- * @param {Event} event - The event object from the navigation trigger.
- * @returns {Promise<void>} A promise that resolves when the view has been successfully fetched and displayed.
- * @throws {Error} Throws an error if the fetch request fails.
- */
-async function navigate(event) {
-    const view = event.currentTarget.id;
-    try {
-        const response = await fetch("../views/" + view + ".html"); // TODO: change to navigating to specific URLs instead.
-        if (!response.ok) {
-            throw new Error("HTTP error " + response.status + " while fetching view " + view + ".");
-        }
-        const content = await response.text();
-        document.getElementById("content").innerHTML = content;
-        setStrings();
-    } catch (error) {
-        console.error("Failed to fetch view " + view + ":", error);
-    }
-}
-
-/**
- * Initializes submenus and configures listeners for all navigation buttons.
+ * Initializes submenus and configures listeners for all navigators.
 */
-function setNavigation() {
+function loadNavigation() {
     // Menus
     /**
      * Creates a submenu button element.
@@ -35,8 +13,8 @@ function setNavigation() {
     function createSubmenu(id, listener) {
         let submenu = document.createElement("button");
         submenu.type = "button";
-        submenu.id = id;
         submenu.classList.add("string");
+        submenu.id = id;
         submenu.addEventListener("click", listener);
         return submenu;
     }
@@ -63,10 +41,36 @@ function setNavigation() {
         menus[menu].addEventListener("click", showMenu);
     }
     document.addEventListener("click", hideMenu);
-    // Navigations
-    const navigations = document.getElementsByClassName("navigation");
-    for (let navigation = 0; navigation < navigations.length; navigation++) {
-        navigations[navigation].addEventListener("click", navigate);
+    // Navigators
+    const navigators = document.getElementsByClassName("navigator");
+    for (let navigator = 0; navigator < navigators.length; navigator++) {
+        navigators[navigator].addEventListener("click", navigate);
+    }
+}
+
+/**
+ * Handles navigation by fetching and displaying the requested view.
+ *
+ * @param {Event} event - The event object from the navigator.
+ * @returns {Promise<void>} A promise that resolves when the view has been successfully fetched and displayed.
+ * @throws {Error} Throws an error if the fetch request fails.
+ */
+async function navigate(event) {
+    const view = event.currentTarget.id;
+    try {
+        const response = await fetch("../views/" + view + ".html"); // TODO: change to navigating to specific URLs instead.
+        if (!response.ok) {
+            throw new Error("HTTP error " + response.status + " while fetching view " + view + ".");
+        }
+        const content = await response.text();
+        document.getElementById("content").innerHTML = content;
+        if (view == "cart") {
+            loadCartTable();
+        }
+        loadNavigation();
+        loadStrings();
+    } catch (error) {
+        console.error("Failed to fetch view " + view + ":", error);
     }
 }
 

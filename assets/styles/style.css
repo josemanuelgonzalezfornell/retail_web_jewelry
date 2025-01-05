@@ -39,6 +39,7 @@ img {
 }
 
 button {
+    height: 30px;
     margin: 0px;
     padding: 0px;
     color: inherit;
@@ -57,12 +58,17 @@ button:not(:has(img)) {
     white-space: nowrap;
 }
 
-button:hover {
+button:hover:not(:disabled) {
     background-color: var(--color_1);
 }
 
 button:focus {
     outline: solid var(--border) var(--color_1);
+}
+
+button:disabled {
+    cursor: inherit;
+    opacity: 0.5;
 }
 
 main button {
@@ -102,16 +108,26 @@ form input {
     margin: 0;
 }
 
+table th,
+table td {
+    padding: 10px;
+}
+
+table td.number {
+    text-align: right;
+}
+
 /* Layout */
 
 main {
-    width: 100%;
-    min-height: calc(100vh - 2* var(--frame));
+    width: calc(100% - 2*var(--margin));
+    min-height: calc(100vh - 2* var(--frame) - 2*var(--margin));
+    padding: var(--margin);
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     align-content: center;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -186,7 +202,6 @@ nav {
     align-content: center;
     justify-content: center;
     align-items: center;
-    /* height: 100%; */
     font-weight: bold;
 }
 
@@ -204,7 +219,7 @@ nav {
     position: relative;
 }
 
-#cart-quantity {
+#cart-counter {
     position: absolute;
     margin-top: 10px;
     margin-left: 4px;
@@ -237,5 +252,20 @@ footer button {
     main {
         min-height: calc(100vh - 3* var(--frame));
     }
+}
 
-    /* Login */
+/* Cart */
+
+table#cart-table td.control {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+table#cart-table td.image {
+    width: auto;
+    height: 100%;
+}

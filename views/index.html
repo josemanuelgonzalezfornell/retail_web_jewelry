@@ -10,6 +10,9 @@
     <script src="../features/main.js"></script>
     <script src="../features/language.js"></script>
     <script src="../features/navigation.js"></script>
+    <script src="../features/cart.js"></script>
+    <script src="../features/login.js"></script>
+    <script src="../features/signup.js"></script>
 </head>
 
 <body onload="main()">
@@ -17,19 +20,19 @@
         <div id="logo"><span>rwj</span></div>
         <nav>
             <div class="left">
-                <button class="string" type="button" id="home"></button>
-                <button class="string" type="button" id="products"></button>
-                <button class="string" type="button" id="about"></button>
+                <button type="button" class="string navigator" id="home"></button>
+                <button type="button" class="string navigator" id="products"></button>
+                <button type="button" class="string navigator" id="about"></button>
             </div>
             <div class="right">
-                <button class="menu" type="button" id="language">
+                <button type="button" class="menu" id="language">
                     <img src="../assets/images/language.png" alt="Language"></img>
                 </button>
-                <button type="button" id="cart">
+                <button type="button" class="navigator" id="cart">
                     <img src="../assets/images/cart.png" alt="Cart"></img>
-                    <div id="cart-quantity">2</div>
+                    <div id="cart-counter"></div>
                 </button>
-                <button class="menu" type="button" id="user">
+                <button type="button" class="menu" id="user">
                     <img src="../assets/images/user.png" alt="User"></img>
                 </button>
             </div>
@@ -38,15 +41,15 @@
     <main id="content"></main>
     <footer>
         <div class="left">
-            <button id="instagram" type="button" onclick="window.open('https://www.instagram.com/')">
+            <button type="button" id="instagram" onclick="window.open('https://www.instagram.com/')">
                 <img src=" ../assets/images/instagram.png" alt="Instagram"></img>
                 <span>@instagram</span>
             </button>
-            <button id="whatsapp" type="button" onclick="window.open('tel://+34600000000')">
+            <button type="button" id="whatsapp" onclick="window.open('tel://+34600000000')">
                 <img src="../assets/images/whatsapp.png" alt="Whatsapp"></img>
                 <span>+34 600 00 00 00</span>
             </button>
-            <button id="mail" type="button" onclick="window.open('mailto://mail@gmail.com')">
+            <button type="button" id="mail" onclick="window.open('mailto://mail@gmail.com')">
                 <img src="../assets/images/mail.png" alt="Mail"></img>
                 <span>mail@gmail.com</span>
             </button>

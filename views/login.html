@@ -1,6 +1,6 @@
-<form>
-    <label for="username"></label><input class="string" type="text" id="username" name="username" required>
+<form onsubmit="submitLogin(event)">
+    <label for="email"></label><input class="string" type="email" id="email" name="email" required>
     <label for="password"></label><input class="string" type="password" id="password" name="password" required>
-    <button class="string" type="submit" id="login"></button>
-    <button class="string" type="button" id="signup"></button>
+    <button type="submit" class="string" id="login"></button>
+    <button type="button" class="string navigator" id="signup"></button>
 </form>
