@@ -2,15 +2,15 @@
  * Loads the cart table in the HTML document with the products stored in localStorage.
  * 
  * This function retrieves the cart data from localStorage, clears the existing table content,
- * and populates it with the product details including preview, quantity, reference, description, price and cost.
- * It also adds a summary row at the end displaying the total cost of the items in the cart.
+ * and populates it with the product details including preview, quantity, id, name, price and cost.
+ * It also adds a total row at the end displaying the total cost of the items in the cart.
  * 
  * The table is expected to be the first table element within the element with the ID "content".
  * 
  * The cart data in localStorage should be a JSON string with the following structure:
  * []
  *    {
- *       "reference": string,
+ *       "id": string,
  *       "quantity": number
  *    },
  *    ...
@@ -19,7 +19,7 @@
 function loadCartTable() {
     const table = document.getElementById("content").getElementsByTagName("table")[0];
     var products = JSON.parse(localStorage.getItem("cart"));
-    const columns = ["control", "quantity", "preview", "reference", "description", "price", "cost"];
+    const columns = ["control", "quantity", "preview", "id", "name", "price", "cost"];
     removeChildren(table);
     let row;
     let cell;
@@ -36,11 +36,11 @@ function loadCartTable() {
             cell.classList.add(columns[column]);
         }
         // Data
-        function createControl(action, reference) {
+        function createControl(action, id) {
             const button = document.createElement("button");
             button.type = "button";
             button.action = action;
-            button.reference = reference;
+            button.id = id;
             button.addEventListener("click", clickControl);
             const img = document.createElement("img");
             button.appendChild(img);
@@ -49,8 +49,8 @@ function loadCartTable() {
         }
         var total = 0;
         for (let product = 0; product < products.length; product++) {
-            // let data = getProduct(products[product]["reference"]);
-            let data = { "info": { "reference": products[product]["reference"], "description": "Product description", "price": Math.round(Math.random() * 100) } }; // TODO: remove when getProduct is implemented.
+            // let data = getProduct(products[product]["id"]);
+            let data = { "info": { "id": products[product]["id"], "name": "Product name", "price": Math.round(Math.random() * 100) } }; // TODO: remove when getProduct is implemented.
             row = document.createElement("tr");
             table.appendChild(row);
             for (let column in columns) {
@@ -58,9 +58,9 @@ function loadCartTable() {
                 row.appendChild(cell);
                 cell.classList.add(columns[column]);
                 if (columns[column] == "control") {
-                    cell.appendChild(createControl("increase", products[product]["reference"]));
-                    cell.appendChild(createControl("remove", products[product]["reference"]));
-                    cell.appendChild(createControl("decrease", products[product]["reference"]));
+                    cell.appendChild(createControl("increase", products[product]["id"]));
+                    cell.appendChild(createControl("remove", products[product]["id"]));
+                    cell.appendChild(createControl("decrease", products[product]["id"]));
                 } else if (columns[column] == "preview") {
                     const preview = document.createElement("img");
                     cell.appendChild(preview);
@@ -80,15 +80,23 @@ function loadCartTable() {
                 }
             }
         }
-        // Summary
+        // Total
         row = document.createElement("tr");
         table.appendChild(row);
-        row.classList.add("summary");
-        cell = document.createElement("td");
-        row.appendChild(cell);
-        cell.classList.add("number");
-        cell.textContent = total.toFixed(2) + "€";
-        cell.setAttribute("colspan", columns.length + 1);
+        row.classList.add("total");
+        for (let column in columns) {
+            cell = document.createElement("td");
+            row.appendChild(cell);
+            cell.classList.add(columns[column]);
+            if (columns[column] == "control") {
+                cell.appendChild(createControl("remove", ""));
+            } else if (columns[column] == "name") {
+                cell.textContent = "Total";
+            } else if (columns[column] == "cost") {
+                cell.classList.add("number");
+                cell.textContent = total.toFixed(2) + "€";
+            }
+        }
     } else {
         const empty = document.createElement("p");
         table.appendChild(empty);
@@ -102,24 +110,22 @@ function loadCartTable() {
  * Adds a product to the shopping cart stored in localStorage.
  * If the product already exists in the cart, its quantity is updated.
  * 
- * @param {string} reference - The unique reference identifier for the product.
- * @param {string} description - The description of the product.
- * @param {number} price - The price of the product.
+ * @param {string} id - The unique identifier for the product.
  * @param {number} quantity - The quantity of the product to add to the cart.
  */
-function addToCart(reference, description, price, quantity) {
+function addToCart(id, quantity) {
     let products = JSON.parse(localStorage.getItem("cart"));
     if (products == null) {
         products = [];
     }
-    let index = products.findIndex(product => product["reference"] === reference);
+    let index = products.findIndex(product => product["id"] === id);
     if (index == -1) {
-        products.push({ "reference": reference, "quantity": quantity });
+        products.push({ "id": id, "quantity": quantity });
     } else {
         products[index]["quantity"] += quantity;
     }
     if (products[index]["quantity"] <= 0) {
-        removeFromCart(reference);
+        removeFromCart(id);
     } else {
         localStorage.setItem("cart", JSON.stringify(products));
         loadCartTable();
@@ -130,12 +136,12 @@ function addToCart(reference, description, price, quantity) {
 /**
  * Removes a product from the shopping cart stored in localStorage.
  *
- * @param {string} reference - The reference identifier of the product to be removed.
+ * @param {string} id - The identifier of the product to be removed.
  */
-function removeFromCart(reference) {
+function removeFromCart(id) {
     let products = JSON.parse(localStorage.getItem("cart"));
     if (products != null) {
-        let index = products.findIndex(product => product["reference"] === reference);
+        let index = products.findIndex(product => product["id"] === id);
         if (index != -1) {
             products.splice(index, 1);
             localStorage.setItem("cart", JSON.stringify(products));
@@ -174,22 +180,26 @@ function setCartCounter() {
 }
 
 /**
- * Handles click events on cart control buttons.
+ * Handles click events on cart product control buttons.
  *
  * @param {Event} event - The event object from the click event.
  * @param {HTMLElement} event.currentTarget - The element that triggered the event.
  * @param {string} event.currentTarget.action - The action to be performed ("increase", "decrease", or "remove").
- * @param {string} event.currentTarget.reference - The reference identifier for the cart item.
+ * @param {string} event.currentTarget.id - The identifier for the product.
  */
 function clickControl(event) {
     const action = event.currentTarget.action;
-    const reference = event.currentTarget.reference;
+    const id = event.currentTarget.id;
     if (action == "increase") {
-        addToCart(reference, 1);
+        addToCart(id, 1);
     } else if (action == "decrease") {
-        addToCart(reference, -1);
+        addToCart(id, -1);
     } else if (action == "remove") {
-        removeFromCart(reference);
+        if (id) {
+            removeFromCart(id);
+        } else {
+            clearCart();
+        }
     }
 }
 

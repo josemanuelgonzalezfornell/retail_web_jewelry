@@ -34,8 +34,8 @@ body {
 }
 
 img {
-    height: calc(100% - 20px);
-    margin: 10px;
+    height: calc(100% - 10px);
+    margin: 5px;
 }
 
 button {
@@ -268,4 +268,12 @@ table#cart-table td.control {
 table#cart-table td.image {
     width: auto;
     height: 100%;
+}
+
+table#cart-table button {
+    margin: 5px;
+}
+
+table#cart-table tr.total {
+    font-weight: bold;
 }
