@@ -1,5 +1,5 @@
 /**
- * Handles submit event on signup form.
+ * Handles the submit event for the signup form.
  *
  * @param {Event} event - The event object from the submit event.
 */

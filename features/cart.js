@@ -15,11 +15,13 @@
  *    },
  *    ...
  * ]
+ * 
+ * @async
  */
-function loadCartTable() {
+async function loadCartTable() {
     const table = document.getElementById("content").getElementsByTagName("table")[0];
     var products = JSON.parse(localStorage.getItem("cart"));
-    const columns = ["control", "quantity", "preview", "id", "name", "price", "cost"];
+    const columns = ["action", "quantity", "preview", "id", "name", "price", "cost"];
     removeChildren(table);
     let row;
     let cell;
@@ -36,12 +38,12 @@ function loadCartTable() {
             cell.classList.add(columns[column]);
         }
         // Data
-        function createControl(action, id) {
+        function createAction(id, action) {
             const button = document.createElement("button");
             button.type = "button";
-            button.action = action;
             button.id = id;
-            button.addEventListener("click", clickControl);
+            button.action = action;
+            button.addEventListener("click", clickCartAction);
             const img = document.createElement("img");
             button.appendChild(img);
             img.src = "../assets/images/" + action + ".png";
@@ -49,31 +51,30 @@ function loadCartTable() {
         }
         var total = 0;
         for (let product = 0; product < products.length; product++) {
-            // let data = getProduct(products[product]["id"]);
-            let data = { "info": { "id": products[product]["id"], "name": "Product name", "price": Math.round(Math.random() * 100) } }; // TODO: remove when getProduct is implemented.
+            let values = await getProduct(products[product]["id"]);
             row = document.createElement("tr");
             table.appendChild(row);
             for (let column in columns) {
                 cell = document.createElement("td");
                 row.appendChild(cell);
                 cell.classList.add(columns[column]);
-                if (columns[column] == "control") {
-                    cell.appendChild(createControl("increase", products[product]["id"]));
-                    cell.appendChild(createControl("remove", products[product]["id"]));
-                    cell.appendChild(createControl("decrease", products[product]["id"]));
+                if (columns[column] == "action") {
+                    cell.appendChild(createAction(products[product]["id"]), "increase");
+                    cell.appendChild(createAction(products[product]["id"]), "remove");
+                    cell.appendChild(createAction(products[product]["id"]), "decrease");
                 } else if (columns[column] == "preview") {
                     const preview = document.createElement("img");
                     cell.appendChild(preview);
-                    // preview.src = data["preview"]; TODO: implement preview retrieval
+                    // preview.src = values[columns[column]]; TODO: implement preview retrieval
                 } else if (["quantity"].includes(columns[column])) {
                     cell.textContent = products[product][columns[column]].toFixed(0) + "x";
                 } else if (columns[column] == "price") {
-                    cell.textContent = data["info"][columns[column]].toFixed(2) + "€";
+                    cell.textContent = values[columns[column]].toFixed(2) + CURRENCY;
                 } else if (columns[column] == "cost") {
-                    cell.textContent = (products[product]["quantity"] * data["info"]["price"]).toFixed(2) + "€";
-                    total += products[product]["quantity"] * data["info"]["price"];
+                    cell.textContent = (products[product]["quantity"] * values["price"]).toFixed(2) + CURRENCY;
+                    total += products[product]["quantity"] * values["price"];
                 } else {
-                    cell.textContent = data["info"][columns[column]];
+                    cell.textContent = values[columns[column]];
                 }
                 if (["quantity", "price", "cost"].includes(columns[column])) {
                     cell.classList.add("number");
@@ -88,22 +89,23 @@ function loadCartTable() {
             cell = document.createElement("td");
             row.appendChild(cell);
             cell.classList.add(columns[column]);
-            if (columns[column] == "control") {
-                cell.appendChild(createControl("remove", ""));
+            if (columns[column] == "action") {
+                cell.appendChild(createAction("remove", ""));
             } else if (columns[column] == "name") {
-                cell.textContent = "Total";
+                cell.id = "total";
+                cell.classList.add("string");
             } else if (columns[column] == "cost") {
                 cell.classList.add("number");
-                cell.textContent = total.toFixed(2) + "€";
+                cell.textContent = total.toFixed(2) + CURRENCY;
             }
         }
     } else {
         const empty = document.createElement("p");
         table.appendChild(empty);
-        empty.id = "empty-cart";
+        empty.id = "cart-empty";
         empty.classList.add("string");
     }
-    document.getElementById("purchase").disabled = products.length == 0;
+    document.getElementById("cart-purchase").disabled = products.length == 0;
 }
 
 /**
@@ -129,7 +131,7 @@ function addToCart(id, quantity) {
     } else {
         localStorage.setItem("cart", JSON.stringify(products));
         loadCartTable();
-        setCartCounter();
+        loadCartCounter();
     }
 }
 
@@ -146,7 +148,7 @@ function removeFromCart(id) {
             products.splice(index, 1);
             localStorage.setItem("cart", JSON.stringify(products));
             loadCartTable();
-            setCartCounter();
+            loadCartCounter();
         }
     }
 }
@@ -165,7 +167,7 @@ function clearCart() {
  * Retrieves the cart data from localStorage, calculates the total quantity of products,
  * and updates the text content of the cart counter element.
  */
-function setCartCounter() {
+function loadCartCounter() {
     const products = JSON.parse(localStorage.getItem("cart"));
     const counter = document.getElementById("cart-counter");
     if (products) {
@@ -180,14 +182,14 @@ function setCartCounter() {
 }
 
 /**
- * Handles click events on cart product control buttons.
+ * Handles click events on a cart action button.
  *
  * @param {Event} event - The event object from the click event.
  * @param {HTMLElement} event.currentTarget - The element that triggered the event.
  * @param {string} event.currentTarget.action - The action to be performed ("increase", "decrease", or "remove").
  * @param {string} event.currentTarget.id - The identifier for the product.
  */
-function clickControl(event) {
+function clickCartAction(event) {
     const action = event.currentTarget.action;
     const id = event.currentTarget.id;
     if (action == "increase") {
@@ -204,10 +206,10 @@ function clickControl(event) {
 }
 
 /**
- * Handles click event on purchase button.
+ * Handles click event on cart purchase button.
  *
  * @param {Event} event - The event object from the click event.
  */
-function clickPurchase(event) {
-    // TODO: implement purchase method.
+function clickCartPurchase(event) {
+    // TODO: implement cart purchase method.
 }

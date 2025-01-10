@@ -1,5 +1,5 @@
 /**
- * Handles submit event on login form.
+ * Handles the submit event for the login form.
  *
  * @param {Event} event - The event object from the submit event.
  */

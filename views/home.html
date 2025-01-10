@@ -1,0 +1,13 @@
+<div id="chatbot">
+    <article id="conversation" disabled></article>
+    <form onsubmit="submitChatInput(event)">
+        <button type="button" class="clear" onclick="clickChatClear(event)">
+            <img src="../assets/images/increase.png" alt="New chat"></img>
+        </button>
+        <input type="textarea" class="string" id="chat-input" oninput="changeChatInput(event)" maxlength="255" autocomplete="off" required autofocus></input>
+        <label id="chat-counter"></label>
+        <button type="submit" class="send">
+            <img src="../assets/images/send.png" alt="Send"></img>
+        </button>
+    </form>
+</div>
