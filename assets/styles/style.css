@@ -1,0 +1,469 @@
+/* General */
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-width: 100%;
+    display: inline-block;
+    font-family: Helvetica;
+    letter-spacing: 2pt;
+}
+
+.left,
+.right {
+    height: inherit;
+    width: inherit;
+    flex: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    align-items: center;
+}
+
+.left {
+    justify-content: flex-start;
+}
+
+.right {
+    justify-content: flex-end;
+}
+
+img {
+    height: calc(100% - 10px);
+    margin: 5px;
+}
+
+button,
+.button {
+    cursor: pointer;
+}
+
+button:hover:not(:disabled),
+.button:hover:not(:disabled) {
+    background-color: var(--color_1);
+}
+
+button:focus,
+.button:focus {
+    outline: solid var(--border) var(--color_1);
+}
+
+button:disabled,
+.button:disabled {
+    cursor: inherit;
+    opacity: 0.5;
+}
+
+button {
+    height: 30px;
+    margin: 0px;
+    padding: 0px;
+    color: inherit;
+    background: inherit;
+    border: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    word-spacing: inherit;
+}
+
+button:not(:has(img)) {
+    padding: 0px 20px 0px 20px;
+    white-space: nowrap;
+}
+
+main button {
+    border-radius: 5px;
+    color: var(--background);
+    background-color: var(--foreground);
+}
+
+.preview {
+    cursor: zoom-in;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: stretch;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+form.narrow {
+    width: 50%;
+    max-width: 400px;
+}
+
+form label,
+form button {
+    margin-top: 20px;
+}
+
+form input,
+form button {
+    width: 100%;
+    height: 30px;
+}
+
+form label {
+    margin-bottom: 5px;
+}
+
+form input {
+    padding: 0;
+    margin: 0;
+}
+
+table th,
+table td {
+    padding: 10px;
+}
+
+table td.number {
+    text-align: right;
+}
+
+/* Layout */
+
+main {
+    width: calc(100% - 2*var(--margin));
+    min-width: 500px;
+    min-height: calc(100vh - 2* var(--frame) - 2*var(--margin));
+    padding: var(--margin);
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+header,
+footer,
+#menu {
+    color: var(--background);
+    background-color: var(--foreground);
+}
+
+header,
+footer {
+    height: var(--frame);
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+header {
+    position: sticky;
+    top: 0;
+}
+
+/* Header */
+
+header button,
+footer button {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+#logo,
+nav {
+    height: var(--frame);
+}
+
+#logo {
+    margin: 0px 20px 0px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* TODO: remove when logo is embedded */
+#logo span {
+    font-size: 18pt;
+    letter-spacing: 8pt;
+    font-weight: lighter;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+nav {
+    flex: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+#menu {
+    border: solid var(--border) var(--background);
+}
+
+#menu>button {
+    height: 40px;
+    width: 200px;
+}
+
+#cart {
+    align-items: flex-start;
+    position: relative;
+}
+
+#cart-counter {
+    position: absolute;
+    margin-top: 10px;
+    margin-left: 4px;
+    font-size: 14pt;
+    text-align: center;
+}
+
+/* Footer */
+
+footer button {
+    padding-right: 30px;
+}
+
+/* Phone features */
+
+@media (max-width: 600px) {
+    header {
+        height: calc(2* var(--frame));
+        flex-direction: column;
+    }
+
+    footer button {
+        padding-right: 0px;
+    }
+
+    footer span {
+        display: none;
+    }
+
+    main {
+        min-height: calc(100vh - 3* var(--frame));
+    }
+}
+
+/* Chat */
+
+#chatbot {
+    width: 100%;
+    height: 100%;
+    max-width: 1000px;
+    flex: auto;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-content: stretch;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#chatbot article#conversation,
+#chatbot form {
+    width: 100%;
+    background-color: var(--background);
+}
+
+#chatbot article#conversation.active,
+#chatbot form {
+    outline: solid var(--border) var(--color_2);
+}
+
+#chatbot article#conversation,
+#chatbot article#conversation .p,
+#chatbot form,
+#chatbot form input#chat-input {
+    border-radius: 10px;
+}
+
+#chatbot article#conversation {
+    height: 0px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: space-between;
+    justify-content: flex-start;
+    align-items: stretch;
+    transition: flex 1s ease-in-out;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+#chatbot article#conversation .product,
+#chatbot article#conversation .collection {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#chatbot article#conversation.active {
+    flex: 1 1 300px;
+}
+
+#chatbot article#conversation>div {
+    margin: 0px 20px 20px 20px;
+}
+
+#chatbot article#conversation>div:first-child {
+    margin-top: 20px;
+}
+
+#chatbot article#conversation .p {
+    max-width: calc(100% - 2* 10px - 2* 20px);
+    padding: 10px;
+    overflow-wrap: break-word;
+}
+
+#chatbot article#conversation .p.bot {
+    border-bottom-left-radius: 0px;
+    background-color: var(--color_1);
+    align-self: flex-start;
+    text-align: left;
+}
+
+#chatbot article#conversation .p.user {
+    border-bottom-right-radius: 0px;
+    background-color: var(--color_2);
+    align-self: flex-end;
+    text-align: right;
+}
+
+#chatbot article#conversation .product,
+#chatbot article#conversation .collection {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#chatbot article#conversation .preview,
+#chatbot article#conversation p {
+    margin: 0px;
+}
+
+#chatbot article#conversation .preview {
+    width: auto;
+    height: 150px;
+}
+
+#chatbot article#conversation .info {
+    margin-left: 10px;
+}
+
+#chatbot article#conversation .actions {
+    margin-bottom: 10px;
+}
+
+#chatbot article#conversation .actions button:not(:first-child) {
+    margin-left: 10px;
+}
+
+#chatbot article#conversation .values .price {
+    font-size: 14pt;
+}
+
+#chatbot article#conversation .values .name {
+    font-weight: bold;
+}
+
+#chatbot article#conversation .values .id {
+    font-size: 10pt;
+}
+
+#chatbot article#conversation .values .description {
+    margin-top: 10px;
+}
+
+#chatbot form {
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color_2);
+}
+
+#chatbot form>* {
+    margin: 10px 10px 10px 0px;
+}
+
+#chatbot form>*:first-child {
+    margin-left: 10px;
+}
+
+#chatbot form button,
+#chatbot form label {
+    white-space: nowrap;
+}
+
+#chatbot form button {
+    width: auto;
+    aspect-ratio: 1;
+}
+
+#chatbot form label {
+    font-size: 10pt;
+}
+
+#chatbot form input#chat-input {
+    height: calc(100% - 2* var(--border) - 2* 10px);
+    flex: auto;
+    background-color: var(--background);
+    border: var(--border) solid var(--background);
+}
+
+/* Cart */
+
+table#cart-table td.action {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+table#cart-table td.image {
+    width: auto;
+    height: 100%;
+}
+
+table#cart-table button {
+    margin: 5px;
+}
+
+table#cart-table tr.total {
+    font-weight: bold;
+}
