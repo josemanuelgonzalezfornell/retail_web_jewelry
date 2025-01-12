@@ -12,7 +12,7 @@ import re
 import json
 
 
-class RAGManager:
+class RAGManager():
 
     def __init__(self):
         self.embedding_function = AzureOpenAIEmbeddings(
