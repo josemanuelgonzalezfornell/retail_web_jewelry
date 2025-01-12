@@ -6,7 +6,7 @@ from utils.languages_bbdd_manager import LANGUAJE_BBDD_MANAGEMENT
 
 index_route = APIRouter()
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="views")
 
 @index_route.get("/", response_class=HTMLResponse)
 async def read_index(request: Request): 

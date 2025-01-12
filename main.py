@@ -12,11 +12,8 @@ rag_manager = RAGManager()
 
 bbdd_manager = BBDD_MANAGEMENT("retail_web_jewelry.db", rag_manager)
 
-app.mount("/static", StaticFiles(directory="static"), name="static", dependencies=[Depends(lambda: bbdd_manager)])
+app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 
 
 app.include_router(bbdd_manager_route, prefix="/database")
-app.include_router(index_route, prefix="/")
-
-if __name__ == "__main__":
-    uvicorn.run(app, port=8080)
+app.include_router(index_route)

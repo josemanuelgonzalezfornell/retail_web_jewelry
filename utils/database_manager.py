@@ -7,7 +7,7 @@ class BBDD_MANAGEMENT():
     def __init__(self, database_path, rag_manager = None):
         self.engine = create_engine(f"sqlite:///{database_path}.db")
         with self.engine.connect() as conn:
-            conn.execute("PRAGMA foreign_keys = ON;")
+            pass
         self.Base = declarative_base()
         self.Session = sessionmaker(bind=self.engine)
         self.session = self.Session()
