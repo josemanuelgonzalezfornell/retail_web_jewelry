@@ -59,9 +59,9 @@ async function loadCartTable() {
                 row.appendChild(cell);
                 cell.classList.add(columns[column]);
                 if (columns[column] == "action") {
-                    cell.appendChild(createAction(products[product]["id"]), "increase");
-                    cell.appendChild(createAction(products[product]["id"]), "remove");
-                    cell.appendChild(createAction(products[product]["id"]), "decrease");
+                    cell.appendChild(createAction(products[product]["id"], "increase"));
+                    cell.appendChild(createAction(products[product]["id"], "remove"));
+                    cell.appendChild(createAction(products[product]["id"], "decrease"));
                 } else if (columns[column] == "preview") {
                     const preview = document.createElement("img");
                     cell.appendChild(preview);
@@ -90,7 +90,7 @@ async function loadCartTable() {
             row.appendChild(cell);
             cell.classList.add(columns[column]);
             if (columns[column] == "action") {
-                cell.appendChild(createAction("remove", ""));
+                cell.appendChild(createAction("", "remove"));
             } else if (columns[column] == "name") {
                 cell.id = "total";
                 cell.classList.add("string");
@@ -130,9 +130,8 @@ function addToCart(id, quantity) {
         removeFromCart(id);
     } else {
         localStorage.setItem("cart", JSON.stringify(products));
-        loadCartTable();
-        loadCartCounter();
     }
+    loadCartCounter();
 }
 
 /**
@@ -147,10 +146,9 @@ function removeFromCart(id) {
         if (index != -1) {
             products.splice(index, 1);
             localStorage.setItem("cart", JSON.stringify(products));
-            loadCartTable();
-            loadCartCounter();
         }
     }
+    loadCartCounter();
 }
 
 /**
@@ -159,7 +157,7 @@ function removeFromCart(id) {
  */
 function clearCart() {
     localStorage.removeItem("cart");
-    loadCartTable();
+    loadCartCounter();
 }
 
 /**
@@ -203,6 +201,7 @@ function clickCartAction(event) {
             clearCart();
         }
     }
+    loadCartTable();
 }
 
 /**

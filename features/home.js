@@ -137,6 +137,16 @@ function hideConversation() {
 }
 
 /**
+ * Clears the conversation by removing all child elements from the conversation element
+ * and hiding the conversation.
+ */
+function clearConversation() {
+    const conversation = document.getElementById("conversation");
+    removeChildren(conversation);
+    hideConversation();
+}
+
+/**
  * Clears the chat input field and resets its value to an empty string.
  * Also calls the loadChatCounter function to update the chat counter.
  */
@@ -187,6 +197,7 @@ function submitChatInput(event) {
 function clickChatClear(event) {
     hideConversation();
     clearChatInput();
+    clearConversation();
 }
 
 /**
@@ -203,6 +214,6 @@ function clickChatAction(event) {
     } else if (action == "share") {
         shareObject(objectclass, id);
     } else if (action == "cart-add") {
-        addToCart(id, 1); // FIXME
+        addToCart(id, 1); // TODO: add visual effects.
     }
 }
