@@ -21,7 +21,7 @@ class RAGManager:
             azure_endpoint=os.getenv("EMB_OPENAI_ENDPOINT"),
             openai_api_version=os.getenv("EMB_OPENAI_API_VERSION"),
         )
-        self.faiss_index_file = "./data/vectorstore/faiss_index"
+        self.faiss_index_file = "../data/vectorstore/faiss_index"
         self.vectorstore = FAISS.load_local(
             folder_path=self.faiss_index_file,
             embeddings=self.embedding_function,
@@ -169,7 +169,16 @@ class RAGManager:
         print(f"output_text: {output_text}")
         print(f"output_ids: {output_ids}")
 
-        query = f"Base de datos a usar para la respuesta: {output_text}, Pregunta: {query}"
+        query = f"""Base de datos a usar para la respuesta obtenida por RAG: {output_text}.
+        Los ids de los elementos de la base de datos son: {output_ids}.
+        Necesito que devuelvas los elementos recuperados de la base de datos con formato HTML, por ejemplo:
+         
+          "<root><p>Hi,<br/>Check this:</p><product>1234</product><p>And also:</p><collection>3214</collection></root>"
+        
+        Lo que se encuentra entre la etiqueta <product> y </product> es el id del producto y lo que se encuentra entre la etiqueta <collection> y </collection> es el id de la colección.
+        El contenido del id es el id de los elementos de la base de datos. Si la pregunta no esta relacionada con la base de datos responde a la pregunta sin devolver ningún elemento de la base de datos. Si la pregunta esta relacionada con la base de datos responde a la pregunta devolviendo los elementos de la base de datos. Si la pregunta está relacionada con la base de datos pero no tienes elementos de la base de datos obtenido por RAG, responde educadamente que no tienes elementos con las características deseadas.
+        
+        Pregunta: {query}"""
         print(query)
 
         output_prompt = self.app.invoke(
