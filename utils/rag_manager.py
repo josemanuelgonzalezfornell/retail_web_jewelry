@@ -21,7 +21,7 @@ class RAGManager:
             azure_endpoint=os.getenv("EMB_OPENAI_ENDPOINT"),
             openai_api_version=os.getenv("EMB_OPENAI_API_VERSION"),
         )
-        self.faiss_index_file = "../data/vectorstore/faiss_index"
+        self.faiss_index_file = "./data/vectorstore/faiss_index"
         self.vectorstore = FAISS.load_local(
             folder_path=self.faiss_index_file,
             embeddings=self.embedding_function,
